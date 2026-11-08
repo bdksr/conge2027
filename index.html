@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Luiaard conge 2027</title>
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--ink:#1d1d1b;--mute:#6b6a64;--line:#e2e0d8;--acc:#2f6f5e;--acc-ink:#fff;--sel:#2f6f5e;--dis:#b9b7ae;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171716;--card:#232321;--ink:#eeede8;--mute:#a09f97;--line:#3a3935;--acc:#5fb59e;--acc-ink:#10201b;--sel:#5fb59e;--dis:#5a5953;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#171716;--card:#232321;--ink:#eeede8;--mute:#a09f97;--line:#3a3935;--acc:#5fb59e;--acc-ink:#10201b;--sel:#5fb59e;--dis:#5a5953;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.5rem;margin:0 0 4px}
+h2{font-size:1.1rem;margin:28px 0 10px}
+.sub{color:var(--mute);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.year{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.mon{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--card)}
+.mon.zomer{border:2px solid #e67e22;padding:9px}
+.mon h3{font-size:.95rem;margin:0 0 6px}
+.mon .grid{gap:2px}
+.mon .dow{font-size:.65rem;padding:2px 0}
+.day{font-size:.8rem}
+.day.cnt{background:var(--sel);color:var(--acc-ink)}
+.day.cnt.zomer{background:#3b6ea5}
+.day.sel.hi{background:#d64545;color:#fff}
+.day.sel.low{background:#2e9e5b;color:#fff}
+.day.cnt{background:#3b6ea5;color:#fff}
+.day.na{opacity:.3;text-decoration:line-through}
+.tip{font-size:.8rem;color:var(--mute);margin:0 0 12px}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px}
+button.primary{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);font-weight:600}
+button:disabled{opacity:.45;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dow{font-size:.75rem;color:var(--mute);text-align:center;padding:4px 0}
+.day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid transparent;background:transparent;padding:0}
+.day:hover:not(:disabled){border-color:var(--sel)}
+.day.sel{background:var(--sel);color:var(--acc-ink);font-weight:600}
+.day:disabled{color:var(--dis);cursor:not-allowed}
+.day.blank{visibility:hidden}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;flex-wrap:wrap}
+.count{font-weight:600;white-space:pre-line;line-height:1.5}
+.modes{display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+#mhigh{border-color:#d64545}
+#mlow{border-color:#2e9e5b}
+#mhigh.on{background:#d64545;color:#fff;border-color:#d64545;font-weight:600}
+#mlow.on{background:#2e9e5b;color:#fff;border-color:#2e9e5b;font-weight:600}
+.count.ok{color:var(--acc)}
+.msg{margin-top:12px;color:var(--mute);font-size:.9rem}
+.err{color:#c0392b}
+.row{padding:12px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row small{color:var(--mute)}
+.days{white-space:pre-line;font-size:.85rem;color:var(--mute);margin-top:4px;word-break:break-word}
+select{font:inherit;padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:100%;max-width:420px}
+.lbl{display:block;font-weight:600;margin-bottom:6px}
+.who{margin-bottom:16px}
+.after{margin-top:16px;padding:14px;border:1px dashed var(--line);border-radius:12px}
+.after p{margin:0 0 10px}
+.after .acts{display:flex;gap:8px;flex-wrap:wrap}
+a.btn{display:inline-block;font:inherit;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 14px}
+.hide{display:none}
+</style>
+</head>
+<body>
+<main>
+  <h1>Luiaard conge 2027</h1>
+  <p class="sub">Gelieve uw conge te kiezen voor 2027</p>
+
+
+  <div id="app">
+    <div class="card">
+      <div class="who">
+        <label class="lbl" for="who">Wie vult het formulier in?</label>
+        <select id="who"><option value="">Kies uw naam…</option></select>
+      </div>
+      <div id="picker" class="hide">
+        <div class="year" id="year"></div>
+        <div class="bar">
+          <span class="count" id="count">0 / 42 dagen</span>
+          <span>
+            <button id="clear">Wissen</button>
+            <button id="send" class="primary" disabled>Keuze bevestigen</button>
+          </span>
+        </div>
+        <div class="msg" id="status"></div>
+        <div id="after" class="after hide">
+          <p><b>Laatste stap:</b> download het Excel-bestand en mail het naar ben.dekeyser@zone1.be. Voeg het gedownloade bestand zelf toe als bijlage in de e-mail.</p>
+          <div class="acts">
+            <button id="xl" class="primary">1. Excel downloaden</button>
+            <a id="mail" class="btn" href="#" target="_blank" rel="noopener">2. E-mail openen</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+(function(){
+  var LIMIT = 42;
+  var MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var selected = new Set(), low = new Set(), mode = "high";
+  var HIGH_LIMIT = 30, LOW_LIMIT = 12;
+  var GROUPS = [
+    {n:1, p:["Dupuis Nicolas","Van Craeynest David","Vandevijvere Dimitri","Derycke Franky"]},
+    {n:2, p:["Matthys Lieven","Houdart Denis","Beuren Lennert","Van der Horst Skip"]},
+    {n:3, p:["Clauwaert Sven","Decru Manuel","Perneel Pim","Valcke David"]},
+    {n:4, p:["Vandierendonck Steve","Debeuckelaere Dennis","Vergracht Donald","De Langhe Nicolas"]},
+    {n:5, p:["Lacoere Bjorn","Coulier Timothy","Verhaeghe Peter"]},
+    {n:6, p:["Stuijk Sander","Dekeyser Ben","Biebuyck Louis","Cooleman Christophe"]},
+    {n:7, p:["Weemaels Stephaan","De Schacht Bart","Crochart Ruben","Simoens Filip"]}
+  ];
+  var PEOPLE = {}, person = null, memory = {};
+  var MAIL_TO = "ben.dekeyser@zone1.be", MAIL_SUBJECT = "conge 2027";
+  var WD = ["zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag"];
+  function savedEntry(){
+    if(!person) return null;
+    if(memory[person.id]) return memory[person.id];
+    try{ var raw=localStorage.getItem("conge2027:"+person.id); return raw?JSON.parse(raw):null; }catch(e){ return null; }
+  }
+  function showAfter(){
+    var e=savedEntry(), box=document.getElementById("after");
+    box.classList.toggle("hide", !e);
+    if(!e) return;
+    var body="Beste Ben,\n\nIn bijlage mijn conge voor 2027.\n\nNaam: "+e.name+" (Groep "+e.group+")\n\nMet vriendelijke groeten,\n"+e.name;
+    document.getElementById("mail").href="mailto:"+MAIL_TO+"?subject="+encodeURIComponent(MAIL_SUBJECT)+"&body="+encodeURIComponent(body);
+  }
+  async function downloadXlsx(){
+    var e=savedEntry(); if(!e) return;
+    if(typeof XLSX==="undefined"){ setStatus("Excel kon niet worden gemaakt (bibliotheek niet geladen).", true); return; }
+    var lw=e.low||[];
+    var rows=[["Naam",e.name],["Groep","Groep "+e.group],["Verstuurd op",new Date(e.submittedAt).toLocaleString("nl-BE")],[],["Datum","Dag","Beschikbaar","Gekozen","Prioriteit"]];
+    var chosen={}; (e.days||[]).forEach(function(k){ chosen[k]=true; });
+    for(var m=0;m<12;m++){
+      var n=new Date(Date.UTC(2027,m+1,0)).getUTCDate();
+      for(var dd=1;dd<=n;dd++){
+        var k=iso(2027,m,dd), d=new Date(Date.UTC(2027,m,dd)), pick=!!chosen[k];
+        rows.push([String(dd).padStart(2,"0")+"/"+String(m+1).padStart(2,"0")+"/2027", WD[d.getUTCDay()], isOpen(k)?"Ja":"Nee", pick?"Ja":"Nee", pick?(lw.indexOf(k)>=0?"Laag":"Hoog"):""]);
+      }
+    }
+    var ws=XLSX.utils.aoa_to_sheet(rows); ws["!cols"]=[{wch:14},{wch:14},{wch:13},{wch:10},{wch:12}];
+    var wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Conge 2027");
+    XLSX.writeFile(wb, "Conge 2027 - "+e.name+".xlsx");
+  }
+  document.getElementById("xl").onclick=downloadXlsx;
+  function slug(g,n){ return "g"+g+"-"+n.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""); }
+  (function(){
+    var sel=document.getElementById("who");
+    GROUPS.forEach(function(g){
+      var og=document.createElement("optgroup"); og.label="Groep "+g.n;
+      g.p.forEach(function(n){
+        var id=slug(g.n,n); PEOPLE[id]={id:id,name:n,group:g.n};
+        var o=document.createElement("option"); o.value=id; o.textContent=n; og.appendChild(o);
+      });
+      sel.appendChild(og);
+    });
+    sel.onchange=function(){ choose(PEOPLE[sel.value]||null); };
+  })();
+  function choose(p){
+    person=p; selected.clear(); low.clear(); setStatus("");
+    $("picker").classList.toggle("hide", !p);
+    var e=savedEntry();
+    if(e){
+      (e.days||[]).forEach(function(d){ if(isOpen(d)) selected.add(d); });
+      (e.low||[]).forEach(function(d){ if(selected.has(d)) low.add(d); });
+      setStatus("Bevestigd op "+new Date(e.submittedAt).toLocaleString()+" (op dit toestel). Wijzig de dagen en bevestig opnieuw om bij te werken.");
+    }
+    render();
+  }
+  var YEAR = 2027;
+  var rows = [];
+
+  function iso(y,m,d){ return y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0"); }
+  var now = new Date(), today = iso(now.getFullYear(), now.getMonth(), now.getDate());
+  // Pattern from 3 Jan 2027: 2 days pickable, 2 days not available, repeating.
+  // Days always come in pairs (the 2 open days of each 4-day block); picking one picks both.
+  function pairOf(key){
+    var p=key.split("-"), t=Date.UTC(+p[0],+p[1]-1,+p[2]);
+    var diff=Math.round((t-Date.UTC(2027,0,3))/86400000);
+    var base=t-(diff%4)*86400000;
+    return [base, base+86400000].map(function(x){
+      var d=new Date(x); return iso(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+    });
+  }
+  // July and August together: at most 8 days.
+  var SUMMER_LIMIT = 8;
+  function isSummer(key){ var m=key.slice(5,7); return m==="07" || m==="08"; }
+  function summerCount(){ var n=0; selected.forEach(function(k){ if(isSummer(k)) n++; }); return n; }
+  function isOpen(key){
+    var p=key.split("-"), t=Date.UTC(+p[0],+p[1]-1,+p[2]);
+    var diff=Math.round((t-Date.UTC(2027,0,3))/86400000);
+    return diff>=0 && diff%4<2;
+  }
+  function $(id){ return document.getElementById(id); }
+  function setStatus(t, bad){ var s=$("status"); s.textContent=t||""; s.className="msg"+(bad?" err":""); }
+
+  // Builds the 12 mini-months. cellFn(button, key) customises each day button.
+  function buildYear(container, cellFn){
+    container.innerHTML="";
+    for(var m=0;m<12;m++){
+      var box=document.createElement("div"); box.className="mon"+(m===6||m===7?" zomer":"");
+      var h=document.createElement("h3"); h.textContent=MONTHS[m]; box.appendChild(h);
+      var g=document.createElement("div"); g.className="grid";
+      ["M","T","W","T","F","S","S"].forEach(function(d){
+        var e=document.createElement("div"); e.className="dow"; e.textContent=d; g.appendChild(e);
+      });
+      var offset=(new Date(YEAR,m,1).getDay()+6)%7, n=new Date(YEAR,m+1,0).getDate();
+      for(var i=0;i<offset;i++){ var bl=document.createElement("button"); bl.className="day blank"; bl.disabled=true; g.appendChild(bl); }
+      for(var d=1; d<=n; d++){
+        var b=document.createElement("button"); b.className="day"; b.textContent=d;
+        cellFn(b, iso(YEAR,m,d)); g.appendChild(b);
+      }
+      box.appendChild(g); container.appendChild(box);
+    }
+  }
+
+  function render(){
+    buildYear($("year"), function(b,key){
+      if(selected.has(key)){ b.classList.add("sel"); b.classList.add(low.has(key)?"low":"hi"); }
+      if(isSummer(key)) b.classList.add("zomer");
+      var open=isOpen(key);
+      if(!open) b.classList.add("blank");
+      b.disabled = key<today || !open;
+      b.setAttribute("aria-pressed", selected.has(key));
+      b.onclick=function(){
+        if(selected.has(key)){ selected.delete(key); low.delete(key); }
+        else {
+          if(selected.size>=LIMIT){ setStatus("U heeft het maximum van "+LIMIT+" dagen bereikt. Deselecteer eerst een dag.", true); return; }
+          if(isSummer(key) && summerCount()>=SUMMER_LIMIT){ setStatus("In juli en augustus samen kunt u maximaal "+SUMMER_LIMIT+" dagen kiezen.", true); return; }
+          mode=(selected.size-low.size<HIGH_LIMIT)?"high":"low";
+          selected.add(key); if(mode==="low") low.add(key);
+        }
+        setStatus(""); render();
+      };
+    });
+    var c=selected.size, ce=$("count");
+    var hi=c-low.size;
+    ce.innerHTML='<span style="color:#d64545">Hoge prioriteit: '+hi+' / '+HIGH_LIMIT+'</span>\n<span style="color:#2e9e5b">Lage prioriteit: '+low.size+' / '+LOW_LIMIT+'</span>\n'+"Totaal: "+c+" / "+LIMIT+" dagen\nJuli en augustus: "+summerCount()+" / "+SUMMER_LIMIT;
+    ce.className="count";
+    $("send").disabled = c<1 || c>LIMIT || hi>HIGH_LIMIT || low.size>LOW_LIMIT;
+    showAfter();
+  }
+
+  $("clear").onclick=function(){ selected.clear(); low.clear(); setStatus(""); render(); };
+
+  $("send").onclick=function(){
+    if(!person||selected.size<1||selected.size>LIMIT) return;
+    var when=new Date().toISOString();
+    var entry={name:person.name, group:person.group, days:Array.from(selected).sort(), low:Array.from(low).sort(), submittedAt:when};
+    memory[person.id]=entry;
+    try{ localStorage.setItem("conge2027:"+person.id, JSON.stringify(entry)); }catch(e){}
+    setStatus("Uw keuze is bevestigd op "+new Date(when).toLocaleString()+". Doe nu de laatste stap hieronder. U kunt de dagen nog wijzigen en opnieuw bevestigen.");
+    render();
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>
