@@ -78,6 +78,11 @@ a.btn{display:inline-block;font:inherit;text-decoration:none;color:var(--ink);ba
         <select id="who"><option value="">Kies uw naam…</option></select>
       </div>
       <div id="picker" class="hide">
+        <div class="modes">
+          <button id="mhigh" class="mode on">Hoge prioriteit</button>
+          <button id="mlow" class="mode">Lage prioriteit</button>
+        </div>
+        <p class="tip">Kies eerst welke soort dag u toevoegt en klik dan op de dagen. Rood is hoge prioriteit, groen is lage prioriteit. Klik op een gekozen dag om hem te verwijderen.</p>
         <div class="year" id="year"></div>
         <div class="bar">
           <span class="count" id="count">0 / 42 dagen</span>
@@ -232,7 +237,8 @@ a.btn{display:inline-block;font:inherit;text-decoration:none;color:var(--ink);ba
         else {
           if(selected.size>=LIMIT){ setStatus("U heeft het maximum van "+LIMIT+" dagen bereikt. Deselecteer eerst een dag.", true); return; }
           if(isSummer(key) && summerCount()>=SUMMER_LIMIT){ setStatus("In juli en augustus samen kunt u maximaal "+SUMMER_LIMIT+" dagen kiezen.", true); return; }
-          mode=(selected.size-low.size<HIGH_LIMIT)?"high":"low";
+          if(mode==="high" && selected.size-low.size>=HIGH_LIMIT){ setStatus("U kunt maximaal "+HIGH_LIMIT+" dagen met hoge prioriteit kiezen. Verwijder een dag of kies lage prioriteit.", true); return; }
+          if(mode==="low" && low.size>=LOW_LIMIT){ setStatus("U kunt maximaal "+LOW_LIMIT+" dagen met lage prioriteit kiezen. Verwijder een dag of kies hoge prioriteit.", true); return; }
           selected.add(key); if(mode==="low") low.add(key);
         }
         setStatus(""); render();
@@ -242,11 +248,14 @@ a.btn{display:inline-block;font:inherit;text-decoration:none;color:var(--ink);ba
     var hi=c-low.size;
     ce.innerHTML='<span style="color:#d64545">Hoge prioriteit: '+hi+' / '+HIGH_LIMIT+'</span>\n<span style="color:#2e9e5b">Lage prioriteit: '+low.size+' / '+LOW_LIMIT+'</span>\n'+"Totaal: "+c+" / "+LIMIT+" dagen\nJuli en augustus: "+summerCount()+" / "+SUMMER_LIMIT;
     ce.className="count";
+    $("mhigh").classList.toggle("on", mode==="high"); $("mlow").classList.toggle("on", mode==="low");
     $("send").disabled = c<1 || c>LIMIT || hi>HIGH_LIMIT || low.size>LOW_LIMIT;
     showAfter();
   }
 
   $("clear").onclick=function(){ selected.clear(); low.clear(); setStatus(""); render(); };
+  $("mhigh").onclick=function(){ mode="high"; render(); };
+  $("mlow").onclick=function(){ mode="low"; render(); };
 
   $("send").onclick=function(){
     if(!person||selected.size<1||selected.size>LIMIT) return;
